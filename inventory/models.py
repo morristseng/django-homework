@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 
 
@@ -24,3 +25,12 @@ class Inventory(models.Model):
         choices=InventoryType.choices, max_length=9)
     commodity = models.ForeignKey(Commodity, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=0)
+
+
+class InventoryLog(models.Model):
+    who = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    action_choices = models.TextChoices('ActionChoice', 'add modify delete')
+    action_type = models.CharField(
+        choices=action_choices.choices, max_length=6)
+    details = models.CharField(max_length=255)
+    timestamp = models.DateTimeField(auto_now_add=True)

@@ -1,6 +1,7 @@
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from .models import Commodity, Inventory, TradeParner
+from .models import Commodity, Inventory, InventoryLog, TradeParner
 
 
 class CompanySerializer(serializers.ModelSerializer):
@@ -31,3 +32,17 @@ class InventoryStatusSerializer(serializers.Serializer):
 
     class Meta:
         fields = ('commodity__name', 'commodity__description', 'quantity')
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = ('username',)
+
+
+class InventoryLogSerializer(serializers.ModelSerializer):
+    who = UserSerializer(read_only=True)
+
+    class Meta:
+        model = InventoryLog
+        fields = ('who', 'action_type', 'details', 'timestamp')
