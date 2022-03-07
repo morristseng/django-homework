@@ -1,11 +1,14 @@
 from django.urls import path
 
-from .views import (ListInventory, ListInventoryStatus,
-                    ListInventoryStatusView, ListInventoryView)
+from . import views
 
 urlpatterns = [
-    path('', ListInventoryView, name='index'),
-    path('status', ListInventoryStatusView),
-    path('api/inventory/list', ListInventory.as_view(), name='list'),
-    path('api/inventory/status', ListInventoryStatus.as_view(), name='status'),
+    path('', views.list_inventory, name='index'),
+    path('status', views.list_inventory_status),
+    path('api/inventory/list', views.list_inventory_api, name='list'),
+    path(
+        'api/inventory/status',
+        views.list_inventory_status_api,
+        name='status',
+    ),
 ]
