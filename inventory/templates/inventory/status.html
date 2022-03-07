@@ -22,7 +22,7 @@
     }, [setPage, setRows, setFirst, data])
 
     React.useEffect(() => {
-      fetch(`/inventory/api/inventory/list?o=${rows}&page=${page + 1}`)
+      fetch(`/inventory/api/inventory/status?o=${rows}&page=${page + 1}`)
         .then(response => response.json())
         .then(data => setData(data));
     }, [page, rows, setData])
@@ -32,13 +32,9 @@
     return (
       <React.Fragment>
         <primereact.DataTable value={data.results} responsiveLayout="scroll">
-          <primereact.Column field="id" header="id" />
+          <primereact.Column field="commodity__name" header="commodity name" />
+          <primereact.Column field="commodity__description" header="commodity description" />
           <primereact.Column field="quantity" header="quantity" />
-          <primereact.Column field="inventory_type" header="type" />
-          <primereact.Column field="customer.name" header="customer name" />
-          <primereact.Column field="customer.address" header="customer address" />
-          <primereact.Column field="commodity.name" header="commodity name" />
-          <primereact.Column field="commodity.description" header="commodity description" />
         </primereact.DataTable>
         <primereact.Paginator first={first} rows={rows} totalRecords={data.count} rowsPerPageOptions={[2,5,10]} onPageChange={onPageChange} />
       </React.Fragment>
