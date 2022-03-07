@@ -32,5 +32,5 @@ class InventoryLog(models.Model):
     action_choices = models.TextChoices('ActionChoice', 'add modify delete')
     action_type = models.CharField(
         choices=action_choices.choices, max_length=6)
-    details = models.CharField(max_length=255)
+    details = models.CharField(max_length=2048)
     timestamp = models.DateTimeField(auto_now_add=True)

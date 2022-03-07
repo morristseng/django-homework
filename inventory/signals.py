@@ -7,6 +7,9 @@ from .models import Inventory, InventoryLog
 @receiver(post_save, sender=Inventory)
 def log_inventory_change(sender, **kwargs):
     obj = kwargs["instance"]
+    if not hasattr(obj, 'user'):
+        return
+
     updated = kwargs["update_fields"]
     action_type = 'add' if kwargs['created'] else 'modify'
     if action_type == 'add':
@@ -26,6 +29,9 @@ def log_inventory_change(sender, **kwargs):
 @receiver(post_delete, sender=Inventory)
 def log_inventory_delete(sender, **kwargs):
     obj = kwargs["instance"]
+    if not hasattr(obj, 'user'):
+        return
+
     InventoryLog.objects.create(
         who=obj.user,
         action_type='delete',
