@@ -10,14 +10,50 @@ from .utils import get_inventory_quantity
 
 
 def list_inventory(request):
-    return render(request, 'inventory/index.html')
+    context = {
+        "api_route": "list",
+        "columns": [
+            {"field": "id", "header": "id"},
+            {"field": "quantity", "header": "quantity"},
+            {"field": "inventory_type", "header": "type"},
+            {"field": "customer.name", "header": "customer name"},
+            {"field": "customer.address", "header": "customer address"},
+            {"field": "commodity.name", "header": "commodity name"},
+            {
+                "field": "commodity.description",
+                "header": "commodity description",
+            },
+        ]
+    }
+    return render(request, 'inventory/list.html', context)
 
 
 def list_inventory_status(request):
-    return render(request, 'inventory/status.html')
+    context = {
+        "api_route": "status",
+        "columns": [
+            {"field": "commodity__name", "header": "commodity name"},
+            {
+                "field": "commodity__description",
+                "header": "commodity description",
+            },
+            {"field": "quantity", "header": "quantity"},
+        ]
+    }
+    return render(request, 'inventory/list.html', context)
+
 
 def list_inventory_log(request):
-    return render(request, 'inventory/log.html')
+    context = {
+        "api_route": "log",
+        "columns": [
+            {"field": "who.username", "header": "who"},
+            {"field": "action_type", "header": "action"},
+            {"field": "details", "header": "details"},
+            {"field": "timestamp", "header": "timestamp"},
+        ]
+    }
+    return render(request, 'inventory/list.html', context)
 
 
 def paginator_helper(request, queryset):
