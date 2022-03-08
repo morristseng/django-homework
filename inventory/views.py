@@ -1,12 +1,11 @@
 from django.core.paginator import Paginator
-from django.db.models import Q, Sum
-from django.db.models.functions import Coalesce
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from .models import Inventory
 from .serializers import InventorySerializer, InventoryStatusSerializer
+from .utils import get_inventory_quantity
 
 
 def list_inventory(request):
@@ -38,16 +37,7 @@ def list_inventory_api(request):
 
 @api_view(['GET'])
 def list_inventory_status_api(request):
-    receiving_quantity = Coalesce(
-        Sum('quantity', filter=Q(inventory_type='receiving')), 0)
-    shipping_quantity = Coalesce(
-        Sum('quantity', filter=Q(inventory_type='shipping')), 0)
-    queryset = Inventory.objects \
-        .values('commodity') \
-        .order_by('commodity') \
-        .annotate(quantity=receiving_quantity-shipping_quantity) \
-        .values('commodity__name', 'commodity__description', 'quantity')
-    cur_page, count = paginator_helper(request, queryset)
+    cur_page, count = paginator_helper(request, get_inventory_quantity())
     serializer = InventoryStatusSerializer(cur_page.object_list, many=True)
     return Response({
         "count": count,
